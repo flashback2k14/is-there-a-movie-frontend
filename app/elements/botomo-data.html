@@ -24,7 +24,7 @@
           };
           var method = options.method || "GET";
           var url = options.url || "";
-          var params = options.params || "";
+          var params = options.params || {};
           var body = options.body || {};
           // check URL length
           if (url.length > 0) {
@@ -33,7 +33,7 @@
             this.$.iaDataRequester.method = method;
             this.$.iaDataRequester.url = url;
             // setup ajax request query parameters
-            if (params.length > 0) {
+            if (params !== null) {
               this.$.iaDataRequester.params = params;
             }
             // setup ajax request body

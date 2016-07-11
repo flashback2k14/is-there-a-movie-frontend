@@ -12,6 +12,7 @@
       .inputs {
         @apply(--layout-flex);
         margin: -15px 20px 0 20px;
+        @apply(--paper-font-title);
       }
       .inputs--colors {
         --paper-input-container-color: #fff;
@@ -23,12 +24,22 @@
         width: 200px;
         margin-top: 0;
         background: var(--paper-pink-a400);
+        @apply(--paper-font-button);
       }
       .btns:hover {
         background: var(--paper-pink-a700);
       }
     </style>
 
+    <!-- data ares -->
+    <botomo-data 
+      id="bdRequester"
+      on-request-response="_handleRequestResponse"
+      on-request-error="_handleRequestError"
+      on-request-failed="_handleRequestFailed">
+    </botomo-data>
+
+    <!-- search area -->
     <paper-material class="app__search--card" elevation="3">
       <paper-input
         id="txtSearchRequest"
@@ -55,7 +66,41 @@
        *
        */
       _sendSearchRequest: function() {
-        this.fire("search-request", {msg: this.$.txtSearchRequest.value});
+        var searchTerm = this.$.txtSearchRequest.value;
+
+        if (searchTerm.length > 0) {
+          var options = {
+            url: this.webserviceUrl + "api/v1/books",
+            params: {
+              "search": searchTerm
+            }
+          };
+
+          this.$.bdRequester.request(options);
+        } else {
+          this.fire("search-failed", {msg: "No Search term available!"});
+        }
+      },
+
+      /**
+       * 
+       */
+      _handleRequestResponse: function(e) {
+        this.fire("search-response", e.detail);
+      },
+
+      /**
+       * 
+       */
+      _handleRequestError: function(e) {
+        this.fire("search-error", e.detail);
+      },
+
+      /**
+       * 
+       */
+      _handleRequestFailed: function(e) {
+        this.fire("search-failed", e.detail);
       }
     });
   </script>

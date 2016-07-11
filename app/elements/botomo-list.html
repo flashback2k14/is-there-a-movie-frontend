@@ -1,0 +1,72 @@
+<dom-module id="botomo-list">
+  <template>
+    <style>
+    </style>
+
+    <template is="dom-repeat" items="[[data]]">
+      <botomo-list-item item="[[item]]"></botomo-list-item>  
+    </template>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "botomo-list",
+      
+      /**
+       *
+       */
+      properties: {
+        data: {
+          type: Array,
+          value: []
+        }
+      },
+
+      /**
+       * 
+       */
+      setTestData: function() {
+        var items = [
+          {
+            "id": 1,
+            "title": "Lorem Ipsum #1",
+            "subtitle": "Lorem Ipsum Sub #1",
+            "author": "Loras Ipsum #1",
+            "year": "2003",
+            "votes": {
+              "up": 2,
+              "down": 12
+            }
+          },
+          {
+            "id": 2,
+            "title": "Lorem Ipsum #2",
+            "subtitle": "Lorem Ipsum Sub #2",
+            "author": "Loras Ipsum #2",
+            "year": "2012",
+            "votes": {
+              "up": 12,
+              "down": 2
+            }
+          },
+          {
+            "id": 3,
+            "title": "Lorem Ipsum #3",
+            "subtitle": "Lorem Ipsum Sub #3",
+            "author": "Loras Ipsum #3",
+            "year": "1955",
+            "votes": {
+              "up": 100,
+              "down": 12
+            }
+          }
+        ];
+
+        items.forEach(function(item) {
+          this.push("data", item);
+        }.bind(this));
+      }
+    });
+  </script>
+</dom-module>

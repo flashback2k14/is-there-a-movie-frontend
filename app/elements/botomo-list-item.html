@@ -1,0 +1,40 @@
+<dom-module id="botomo-list-item">
+  <template>
+    <style>
+      
+      .item {
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 10px;
+        background: #424242;
+        color: #FFFFFF;
+      }
+
+    </style>
+
+    <paper-material class="item" elevation="3">
+      <span>[[item.title]] - [[item.subtitle]]</span>
+      <hr>
+      <span>[[item.author]] - [[item.year]]</span>
+      <hr>
+      <span>[[item.votes.up]] - [[item.votes.down]]</p>
+    </paper-material>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "botomo-list-item",
+      
+      /**
+       *
+       */
+      properties: {
+        item: {
+          type: Object,
+          value: {}
+        }
+      }
+    });
+  </script>
+</dom-module>
