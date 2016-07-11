@@ -1,0 +1,4 @@
+{
+  "entrypoint": "app/index.html",
+  "shell": "app/elements/elements.html"
+}

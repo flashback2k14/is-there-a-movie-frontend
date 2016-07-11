@@ -1,0 +1,21 @@
+{
+  "name": "is-there-a-movie-frontend",
+  "description": "Frontend for is-there-a-movie",
+  "version": "0.0.1",
+  "authors": [
+    "cs13dr1",
+    "flashback2k14",
+    "hetec",
+    "lyio"
+  ],
+  "private": true,
+  "dependencies": {
+    "iron-elements": "PolymerElements/iron-elements#^1.0.9",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.7",
+    "neon-elements": "PolymerElements/neon-elements#^1.0.0",
+    "polymer": "polymer/polymer#^1.4.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "^4.0.0"
+  }
+}

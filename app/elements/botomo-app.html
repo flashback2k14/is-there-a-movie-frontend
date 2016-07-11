@@ -1,0 +1,24 @@
+<dom-module id="botomo-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+      is: "botomo-app",
+
+      properties: {
+        prop1: {
+          type: String,
+          value: "botomo-app",
+        },
+      }
+    });
+  </script>
+</dom-module>
