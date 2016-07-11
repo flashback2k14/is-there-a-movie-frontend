@@ -1,0 +1,11 @@
+{
+  "suites": ["app/test"],
+  "verbose": false,
+  "persistent": true,
+  "expanded": true,
+  "plugins": {
+    "local": {
+      "browsers": ["chrome"]
+    }
+  }
+}
