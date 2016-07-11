@@ -1,0 +1,68 @@
+<dom-module id="botomo-data">
+  <template>
+    <iron-ajax
+      id="iaDataRequester"
+      handle-as="json"
+      on-response="_handleResponse"
+      on-error="_handleError">
+    </iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      is: "botomo-data",
+
+      /**
+       * 
+       */
+      request: function(options) {
+        if (options) {
+          // Get request options
+          var header = options.header || {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          };
+          var method = options.method || "GET";
+          var url = options.url || "";
+          var params = options.params || "";
+          var body = options.body || {};
+          // check URL length
+          if (url.length > 0) {
+            // setup ajax request
+            this.$.iaDataRequester.headers = header;
+            this.$.iaDataRequester.method = method;
+            this.$.iaDataRequester.url = url;
+            // setup ajax request query parameters
+            if (params.length > 0) {
+              this.$.iaDataRequester.params = params;
+            }
+            // setup ajax request body
+            if (method !== "GET" && body !== null) {
+              this.$.iaDataRequester.body = body;
+            }
+            // send ajax request
+            this.$.iaDataRequester.generateRequest();
+          } else {
+            this.fire("request-failed", {msg: "No URL Parameter available!"});
+          }
+        } else {
+          this.fire("request-failed", {msg: "No Options Menu available!"});
+        }
+      },
+
+      /**
+       * 
+       */
+      _handleResponse: function(response) {
+        this.fire("request-response", response);
+      },
+
+      /**
+       * 
+       */
+      _handleError: function(error) {
+        this.fire("request-error", error);
+      }
+    });
+  </script>
+</dom-module>

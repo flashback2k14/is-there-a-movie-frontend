@@ -1,0 +1,62 @@
+<dom-module id="botomo-search">
+  <template>
+    <style>
+      .app__search--card {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        width: 1000px;
+        padding: 10px;
+        background: #424242;
+      }
+
+      .inputs {
+        @apply(--layout-flex);
+        margin: -15px 20px 0 20px;
+      }
+      .inputs--colors {
+        --paper-input-container-color: #fff;
+        --paper-input-container-focus-color: var(--paper-pink-a400);
+        --paper-input-container-input-color: #fff;
+      }
+
+      .btns {
+        width: 200px;
+        margin-top: 0;
+        background: var(--paper-pink-a400);
+      }
+      .btns:hover {
+        background: var(--paper-pink-a700);
+      }
+    </style>
+
+    <paper-material class="app__search--card" elevation="3">
+      <paper-input
+        id="txtSearchRequest"
+        class="inputs inputs--colors"
+        type="text"
+        label="Enter your Search Request..."
+        tabindex="1">
+      </paper-input>
+      <paper-button
+        class="btns"
+        on-tap="_sendSearchRequest"
+        raised
+        tabindex="2">Search
+      </paper-button>
+    </paper-material>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "botomo-search",
+      
+      /**
+       *
+       */
+      _sendSearchRequest: function() {
+        this.fire("search-request", {msg: this.$.txtSearchRequest.value});
+      }
+    });
+  </script>
+</dom-module>

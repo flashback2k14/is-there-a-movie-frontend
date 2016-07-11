@@ -1,23 +1,99 @@
 <dom-module id="botomo-app">
   <template>
     <style>
-      :host {
-        display: block;
+      .app {
+        @apply(--layout-vertical);
+      }
+      .app--centering {
+        @apply(--layout-center);
+      }
+
+      .app__title {
+        @apply(--paper-font-display2);
+      }
+      .app__search {
+        @apply(--paper-font-title);
+        width: 100%;
+        padding: 20px;
+      }
+      .app__info {
+        --paper-toast-background-color: var(--paper-red-a400);
+        --paper-toast-color: #000;
       }
     </style>
-    
-    <h2>Hello [[prop1]]</h2>
+
+    <div class="app">
+
+      <!-- data ares -->
+      <botomo-data 
+        id="bdRequester"
+        on-request-response="_handleRequestResponse"
+        on-request-error="_handleRequestError"
+        on-request-failed="_handleRequestFailed">
+      </botomo-data>
+
+      <!-- title area -->
+      <div class="app app--centering app__title">
+        <h1>is there a movie?</h1>
+      </div>
+
+      <!-- search area -->
+      <div class="app app--centering app__search">
+        <botomo-search
+          on-search-request="_handleSearchRequest">
+        </botomo-search>
+      </div>
+
+      <!-- list area -->
+
+
+      <!-- toast area -->
+      <paper-toast id="infoToast" class="app__info"></paper-toast>
+
+    </div>
+
   </template>
 
   <script>
     Polymer({
       is: "botomo-app",
 
-      properties: {
-        prop1: {
-          type: String,
-          value: "botomo-app",
-        },
+
+      /**
+       * 
+       */
+      _showMessage: function(msg) {
+        this.$.infoToast.text = msg;
+        this.$.infoToast.show();
+      },
+
+      /**
+       * 
+       */
+      _handleSearchRequest: function(e) {
+        alert("Search Request: " + e.detail.msg);
+        this.$.bdRequester.request();
+      },
+
+      /**
+       * 
+       */
+      _handleRequestResponse: function(e) {
+
+      },
+
+      /**
+       * 
+       */
+      _handleRequestError: function(e) {
+        
+      },
+
+      /**
+       * 
+       */
+      _handleRequestFailed: function(e) {
+        this._showMessage(e.detail.msg);
       }
     });
   </script>
