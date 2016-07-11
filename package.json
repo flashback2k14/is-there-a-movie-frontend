@@ -7,8 +7,8 @@
     "lint": "polymer lint",
     "rm-build": "rm -rf build/",
     "serve-app": "polymer serve -o",
-    "serve-build-b": "cd build/bundled/ && npm run serve",
-    "serve-build-u": "cd build/unbundled/ && npm run serve",
+    "serve-build-b": "cd build/bundled/ && npm run serve-app",
+    "serve-build-u": "cd build/unbundled/ && npm run serve-app",
     "test-skip-si": "polymer test --skip-selenium-install"
   }
 }
