@@ -21,6 +21,9 @@
       .app__content--search {
         width: 70%;
       }
+      .app__content--add {
+        width: 50%;
+      }
       .app__content--list {
         width: 50%;
       }
@@ -61,7 +64,14 @@
       <!-- add area -->
       <template is="dom-if" if="{{showAddArea}}">
         <div class="app app--centering app__content">
-          <p>Placeholder </p>
+          <botomo-add
+            class="app__content--add"
+            webservice-url="[[webserviceUrl]]"
+            on-add-request-canceled="_handleAddRequestCanceled"
+            on-add-request-finished="_handleAddRequestFinished"
+            on-request-error="_handleRequestError"
+            on-request-failed="_handleRequestFailed">
+          </botomo-add>
         </div>
       </template>
     
@@ -70,6 +80,7 @@
         <botomo-list
           id="bList"
           class="app__content--list"
+          webservice-url="[[webserviceUrl]]"
           data="{{data}}"
           on-request-error="_handleRequestError"
           on-request-failed="_handleRequestFailed">
@@ -98,13 +109,15 @@
       },
 
       /**
+       * BEGIN UTILS
+       */
+      /**
        * 
        */
       _showMessage: function(msg) {
         this.$.infoToast.text = msg;
         this.$.infoToast.show();
       },
-
       /**
        * 
        */
@@ -114,6 +127,9 @@
         };
         this.$.bdRequester.request(options);
       },
+      /**
+       * END UTILS
+       */
 
       /**
        * BEGIN SEARCH
@@ -136,20 +152,51 @@
         // clear list
         this.set("data", []);
         // get data
-        var book = e.detail.detail.response[0];
-        if (book) {
+        var books = e.detail.detail.response;
+        if (books.length > 0) {
           // hide add area
           this.set("showAddArea", false);
           // add item to list
-          this.push("data", e.detail.detail.response[0]);
+          books.forEach(function(book) {
+            this.push("data", book);
+          }.bind(this));
         } else {
-          this._showMessage("No Books available!");
+          this._showMessage("No Books available! Please add this Book!");
           // show add area
           this.set("showAddArea", true);
         }
       },
       /**
        * END SEARCH
+       */
+
+      /**
+       * BEGIN ADD
+       */
+      /**
+       * 
+       */
+      _handleAddRequestCanceled: function() {
+        this.set("showAddArea", false);
+        this._showMessage("Add new Book canceled!");
+        this._getAll();
+      },
+      /**
+       * 
+       */
+      _handleAddRequestFinished: function(e) {
+        this.set("showAddArea", false);
+        this._showMessage("Add new Book finished!");
+        /**
+         * ToDo:
+         *  Add Book to List 
+         */
+        // get data
+        var book = e.detail.detail.response[0];
+        this.unshift("data", book);
+      },
+      /**
+       * END ADD
        */
 
       /**

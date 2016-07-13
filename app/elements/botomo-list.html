@@ -2,7 +2,10 @@
   <template>
 
     <template is="dom-repeat" items="[[data]]">
-      <botomo-list-item item="[[item]]"></botomo-list-item>  
+      <botomo-list-item 
+        webservice-url=[[webserviceUrl]] 
+        item="[[item]]">
+      </botomo-list-item>  
     </template>
 
   </template>
@@ -15,6 +18,10 @@
        *
        */
       properties: {
+        webserviceUrl: {
+          type: String,
+          value: ""
+        },
         data: {
           type: Array,
           value: []
