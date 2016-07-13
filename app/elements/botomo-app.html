@@ -9,10 +9,12 @@
       }
 
       .app__title {
+        margin-top: 30px;
         @apply(--paper-font-display2);
       }
       .app__content {
         width: 100%;
+        margin-top: 30px;
         padding: 20px;
       }
       .app__info {
@@ -39,6 +41,7 @@
       <!-- search area -->
       <div class="app app--centering app__content">
         <botomo-search
+          webservice-url="[[webserviceUrl]]"
           on-search-response="_handleSearchResponse"
           on-search-error="_handleSearchError"
           on-search-failed="_handleSearchFailed">
@@ -48,7 +51,8 @@
       <!-- list area -->
       <div class="app app--centering app__content">
         <botomo-list
-          id="bList">
+          id="bList"
+          data="{{data}}">
         </botomo-list>
       </div>
 
@@ -82,18 +86,31 @@
       },
 
       /**
+       * 
+       */
+      _getAll: function() {
+        var options = {
+          url: this.webserviceUrl + "api/v1/books"
+        };
+        this.$.bdRequester.request(options);
+      },
+
+      /**
        * BEGIN SEARCH
        */
       /**
        * 
        */
       _handleSearchResponse: function(e) {
-        console.log("Search Response");
-        console.dir(e.detail);
-        /**
-         * ToDo: 
-         *  add Response Data to botomo-list
-         */
+        // clear list
+        this.set("data", []);
+        // get data
+        var book = e.detail.detail.response[0];
+        if (book) {
+          this.push("data", e.detail.detail.response[0]);
+        } else {
+          this._showMessage("No Books available!");
+        }
       },
       /**
        * 
@@ -112,6 +129,7 @@
        */
       _handleSearchFailed: function(e) {
         this._showMessage(e.detail.msg);
+        this._getAll();
       },
       /**
        * END SEARCH
@@ -124,12 +142,10 @@
        * 
        */
       _handleRequestResponse: function(e) {
-        console.log("Ready Response");
-        console.dir(e.detail);
-        /**
-         * ToDo:
-         *  add Response Data to botomo-list
-         */
+        var tmp = e.detail.detail.response;
+        tmp.forEach(function(item) {
+          this.push("data", item);
+        }.bind(this));
       },
       /**
        * 
@@ -158,10 +174,10 @@
        * 
        */
       ready: function() {
-        var options = {
-          url: this.webserviceUrl + "api/v1/books"
-        };
-        this.$.bdRequester.request(options);
+        // data binding variable for list
+        this.data = [];
+        // call all books on load
+        this._getAll();
       }
     });
   </script>
