@@ -1,8 +1,8 @@
 <dom-module id="botomo-list-item">
   <template>
     <style>
-      
       .item {
+        @apply(--layout-horizontal);
         width: 100%;
         margin-bottom: 20px;
         padding: 10px;
@@ -10,14 +10,29 @@
         color: #FFFFFF;
       }
 
+      .item__left {
+        @apply(--layout-vertical);
+        padding: 10px;
+      }
+
+      .item__right {
+        @apply(--layout-vertical);
+        padding: 10px;
+      }
     </style>
 
     <paper-material class="item" elevation="3">
-      <span>[[item.title]] - [[item.subtitle]]</span>
-      <hr>
-      <span>[[item.author]] - [[item.year]]</span>
-      <hr>
-      <span>[[item.ups]] - [[item.downs]]</p>
+
+      <div class="item__left">
+        <span>[[item.ups]]</span>
+        -
+        <span>[[item.downs]]</span>
+      </div>
+      <div class="item__right">
+        <h3>[[item.title]]</h3>
+        <h5>[[item.subtitle]]</h5>
+        <span>[[item.author]] - [[item.year]]</span>
+      </div>
     </paper-material>
 
   </template>
