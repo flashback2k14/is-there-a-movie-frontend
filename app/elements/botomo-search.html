@@ -79,14 +79,17 @@
         var searchTerm = this.$.txtSearchRequest.value;
 
         if (searchTerm.length > 0) {
-          var options = {
-            url: this.webserviceUrl + "api/v1/books",
-            params: {
-              "search": searchTerm
-            }
-          };
-
-          this.$.bdRequester.request(options);
+          if (searchTerm === "*") {
+            this.fire("search-all");
+          } else {
+            var options = {
+              url: this.webserviceUrl + "api/v1/books",
+              params: {
+                "search": searchTerm
+              }
+            };
+            this.$.bdRequester.request(options);
+          }
         } else {
           this.fire("search-failed", {msg: "No Search term available!"});
         }

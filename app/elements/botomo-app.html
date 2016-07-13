@@ -9,7 +9,7 @@
       }
 
       .app__title {
-        margin-top: 30px;
+        margin-top: 50px;
         @apply(--paper-font-display2);
       }
       .app__content {
@@ -42,6 +42,7 @@
       <div class="app app--centering app__content">
         <botomo-search
           webservice-url="[[webserviceUrl]]"
+          on-search-all="_handleSearchAll"
           on-search-response="_handleSearchResponse"
           on-search-error="_handleSearchError"
           on-search-failed="_handleSearchFailed">
@@ -101,6 +102,15 @@
       /**
        * 
        */
+      _handleSearchAll: function() {
+        // clear list
+        this.set("data", []);
+        // get data
+        this._getAll();
+      },
+      /**
+       * 
+       */
       _handleSearchResponse: function(e) {
         // clear list
         this.set("data", []);
@@ -129,7 +139,6 @@
        */
       _handleSearchFailed: function(e) {
         this._showMessage(e.detail.msg);
-        this._getAll();
       },
       /**
        * END SEARCH
