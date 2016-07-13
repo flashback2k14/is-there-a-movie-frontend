@@ -15,8 +15,16 @@
       .app__content {
         width: 100%;
         margin-top: 30px;
-        padding: 20px;
+        padding: 20px 0 20px 0;
       }
+
+      .app__content--search {
+        width: 70%;
+      }
+      .app__content--list {
+        width: 50%;
+      }
+
       .app__info {
         --paper-toast-background-color: var(--paper-red-a400);
         --paper-toast-color: #000;
@@ -41,19 +49,30 @@
       <!-- search area -->
       <div class="app app--centering app__content">
         <botomo-search
+          class="app__content--search"
           webservice-url="[[webserviceUrl]]"
           on-search-all="_handleSearchAll"
           on-search-response="_handleSearchResponse"
-          on-search-error="_handleSearchError"
-          on-search-failed="_handleSearchFailed">
+          on-request-error="_handleRequestError"
+          on-request-failed="_handleRequestFailed">
         </botomo-search>
       </div>
 
+      <!-- add area -->
+      <template is="dom-if" if="{{showAddArea}}">
+        <div class="app app--centering app__content">
+          <p>Placeholder </p>
+        </div>
+      </template>
+    
       <!-- list area -->
       <div class="app app--centering app__content">
         <botomo-list
           id="bList"
-          data="{{data}}">
+          class="app__content--list"
+          data="{{data}}"
+          on-request-error="_handleRequestError"
+          on-request-failed="_handleRequestFailed">
         </botomo-list>
       </div>
 
@@ -103,6 +122,8 @@
        * 
        */
       _handleSearchAll: function() {
+        // hide add area
+        this.set("showAddArea", false);
         // clear list
         this.set("data", []);
         // get data
@@ -117,28 +138,15 @@
         // get data
         var book = e.detail.detail.response[0];
         if (book) {
+          // hide add area
+          this.set("showAddArea", false);
+          // add item to list
           this.push("data", e.detail.detail.response[0]);
         } else {
           this._showMessage("No Books available!");
+          // show add area
+          this.set("showAddArea", true);
         }
-      },
-      /**
-       * 
-       */
-      _handleSearchError: function(e) {
-        if (e instanceof Event) {
-          this._showMessage(e.detail.detail.error.message);
-        }
-        /**
-         * ToDo:
-         *  handle Error from Backend
-         */
-      },
-      /**
-       * 
-       */
-      _handleSearchFailed: function(e) {
-        this._showMessage(e.detail.msg);
       },
       /**
        * END SEARCH
@@ -162,7 +170,6 @@
       _handleRequestError: function(e) {
         if (e instanceof Event) {
           this._showMessage(e.detail.detail.error.message ? e.detail.detail.error.message : "Error to load Data!");
-          this.$.bList.setTestData();  
         }
         /**
          * ToDo:
@@ -183,6 +190,8 @@
        * 
        */
       ready: function() {
+        // data binding variable for add area
+        this.showAddArea = false;
         // data binding variable for list
         this.data = [];
         // call all books on load

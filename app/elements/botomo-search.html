@@ -4,7 +4,6 @@
       .app__search--card {
         @apply(--layout-horizontal);
         @apply(--layout-center);
-        width: 1000px;
         padding: 10px;
         background: #424242;
       }
@@ -34,9 +33,7 @@
     <!-- data ares -->
     <botomo-data 
       id="bdRequester"
-      on-request-response="_handleRequestResponse"
-      on-request-error="_handleRequestError"
-      on-request-failed="_handleRequestFailed">
+      on-request-response="_handleRequestResponse">
     </botomo-data>
 
     <!-- search area -->
@@ -91,7 +88,7 @@
             this.$.bdRequester.request(options);
           }
         } else {
-          this.fire("search-failed", {msg: "No Search term available!"});
+          this.fire("request-failed", {msg: "No Search term available!"});
         }
       },
 
@@ -100,20 +97,6 @@
        */
       _handleRequestResponse: function(e) {
         this.fire("search-response", e.detail);
-      },
-
-      /**
-       * 
-       */
-      _handleRequestError: function(e) {
-        this.fire("search-error", e.detail);
-      },
-
-      /**
-       * 
-       */
-      _handleRequestFailed: function(e) {
-        this.fire("search-failed", e.detail);
       }
     });
   </script>
