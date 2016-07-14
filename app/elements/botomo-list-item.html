@@ -1,0 +1,139 @@
+<dom-module id="botomo-list-item">
+  <template>
+    <style>
+      .item {
+        @apply(--layout-horizontal);
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      .item--centering {
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+      }
+
+      .item__left {
+        @apply(--layout-vertical);
+        @apply(--layout-center-justified);
+        width: 25%;
+        background: #424242;
+        color: #FFFFFF;
+      }
+      .item__left--text {
+        @apply(--paper-font-headline);
+        padding: 10px 0 10px 0;
+      }
+
+      .item__right {
+        @apply(--layout-vertical);
+        width: 75%;
+        padding: 10px 10px 10px 30px;
+        background: #EEEEEE;
+        color: #000000;
+      }
+      .item__right--title {
+        @apply(--paper-font-display1);
+        padding-bottom: 5px;
+      }
+      .item__right--subtitle {
+        @apply(--paper-font-headline);
+        margin-bottom: 30px;
+      }
+      .item__right--text {
+        @apply(--paper-font-subhead);
+      }
+      .item__right--text--padding {
+        padding-bottom: 5px;
+      }
+    </style>
+
+    <!-- data ares -->
+    <botomo-data 
+      id="bdRequester"
+      on-request-response="_handleRequestResponse">
+    </botomo-data>
+
+    <!-- list item -->
+    <paper-material class="item" elevation="3">
+      <div class="item__left item--centering">
+        <paper-icon-button 
+          icon="arrow-upward" 
+          on-tap="_handleUpvote">
+        </paper-icon-button>
+        <div class="item__left--text">
+          {{_calcVotes(item.ups, item.downs)}}
+        </div>
+        <paper-icon-button 
+          icon="arrow-downward" 
+          on-tap="_handleDownvote">
+        </paper-icon-button>
+      </div>
+      <div class="item__right">
+        <div class="item--centering">
+          <div class="item__right--title">
+            [[item.title]]
+          </div>
+          <div class="item__right--subtitle">
+            [[item.subtitle]]
+          </div>
+        </div>
+        <div class="item__right--text item__right--text--padding">
+          written by [[item.author]]
+        </div>
+        <div class="item__right--text">
+          published in [[item.year]]
+        </div>
+      </div>
+    </paper-material>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "botomo-list-item",
+      
+      /**
+       *
+       */
+      properties: {
+        webserviceUrl: {
+          type: String,
+          value: ""
+        },
+        item: {
+          type: Object,
+          value: {}
+        }
+      },
+
+      _calcVotes: function(ups, downs) {
+        return ups - downs;
+      },
+
+      _handleUpvote: function() {
+        var options = {
+          url: this.webserviceUrl + "api/v1/books/" + this.item.id + "/upvote",
+          method: "POST"
+        };
+        this.$.bdRequester.request(options);
+      },
+
+      _handleDownvote: function() {
+        var options = {
+          url: this.webserviceUrl + "api/v1/books/" + this.item.id + "/downvote",
+          method: "POST"
+        };
+        this.$.bdRequester.request(options);
+      },
+
+      _handleRequestResponse: function(e) {
+        var isUpvote = e.detail.detail.xhr.responseURL.indexOf("upvote");
+
+        if (isUpvote > -1) {
+          this.set("item.ups", ++this.item.ups);
+        } else {
+          this.set("item.downs", ++this.item.downs);
+        }
+      }
+    });
+  </script>
+</dom-module>

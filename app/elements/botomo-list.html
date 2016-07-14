@@ -1,0 +1,32 @@
+<dom-module id="botomo-list">
+  <template>
+
+    <template is="dom-repeat" items="[[data]]">
+      <botomo-list-item 
+        webservice-url=[[webserviceUrl]] 
+        item="[[item]]">
+      </botomo-list-item>  
+    </template>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "botomo-list",
+      
+      /**
+       *
+       */
+      properties: {
+        webserviceUrl: {
+          type: String,
+          value: ""
+        },
+        data: {
+          type: Array,
+          value: []
+        }
+      }
+    });
+  </script>
+</dom-module>

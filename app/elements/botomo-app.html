@@ -1,23 +1,251 @@
 <dom-module id="botomo-app">
   <template>
     <style>
-      :host {
-        display: block;
+      .app {
+        @apply(--layout-vertical);
+      }
+      .app--centering {
+        @apply(--layout-center);
+      }
+
+      .app__title {
+        margin-top: 50px;
+        @apply(--paper-font-display2);
+      }
+      .app__content {
+        width: 100%;
+        margin-top: 30px;
+        padding: 20px 0 20px 0;
+      }
+
+      .app__content--search {
+        width: 70%;
+      }
+      .app__content--add {
+        width: 50%;
+      }
+      .app__content--list {
+        width: 50%;
+      }
+
+      .app__info {
+        --paper-toast-background-color: var(--paper-red-a400);
+        --paper-toast-color: #000;
       }
     </style>
+
+    <div class="app">
+
+      <!-- data ares -->
+      <botomo-data 
+        id="bdRequester"
+        on-request-response="_handleRequestResponse"
+        on-request-error="_handleRequestError"
+        on-request-failed="_handleRequestFailed">
+      </botomo-data>
+
+      <!-- title area -->
+      <div class="app app--centering app__title">
+        <h1>is there a movie?</h1>
+      </div>
+
+      <!-- search area -->
+      <div class="app app--centering app__content">
+        <botomo-search
+          class="app__content--search"
+          webservice-url="[[webserviceUrl]]"
+          on-search-all="_handleSearchAll"
+          on-search-response="_handleSearchResponse"
+          on-request-error="_handleRequestError"
+          on-request-failed="_handleRequestFailed">
+        </botomo-search>
+      </div>
+
+      <!-- add area -->
+      <template is="dom-if" if="{{showAddArea}}">
+        <div class="app app--centering app__content">
+          <botomo-add
+            class="app__content--add"
+            webservice-url="[[webserviceUrl]]"
+            on-add-request-canceled="_handleAddRequestCanceled"
+            on-add-request-finished="_handleAddRequestFinished"
+            on-request-error="_handleRequestError"
+            on-request-failed="_handleRequestFailed">
+          </botomo-add>
+        </div>
+      </template>
     
-    <h2>Hello [[prop1]]</h2>
+      <!-- list area -->
+      <div class="app app--centering app__content">
+        <botomo-list
+          id="bList"
+          class="app__content--list"
+          webservice-url="[[webserviceUrl]]"
+          data="{{data}}"
+          on-request-error="_handleRequestError"
+          on-request-failed="_handleRequestFailed">
+        </botomo-list>
+      </div>
+
+      <!-- toast area -->
+      <paper-toast id="infoToast" class="app__info"></paper-toast>
+
+    </div>
+
   </template>
 
   <script>
     Polymer({
       is: "botomo-app",
 
+      /**
+       * 
+       */
       properties: {
-        prop1: {
+        webserviceUrl: {
           type: String,
-          value: "botomo-app",
-        },
+          value: ""
+        }
+      },
+
+      /**
+       * BEGIN UTILS
+       */
+      /**
+       * 
+       */
+      _showMessage: function(msg) {
+        this.$.infoToast.text = msg;
+        this.$.infoToast.show();
+      },
+      /**
+       * 
+       */
+      _getAll: function() {
+        var options = {
+          url: this.webserviceUrl + "api/v1/books"
+        };
+        this.$.bdRequester.request(options);
+      },
+      /**
+       * 
+       */
+      _hideNotifyGetAll: function(msg) {
+        this.set("showAddArea", false);
+        this._showMessage("Add new Book canceled!");
+        this._getAll();
+      },
+      /**
+       * END UTILS
+       */
+
+      /**
+       * BEGIN SEARCH
+       */
+      /**
+       * 
+       */
+      _handleSearchAll: function() {
+        // hide add area
+        this.set("showAddArea", false);
+        // clear list
+        this.set("data", []);
+        // get data
+        this._getAll();
+      },
+      /**
+       * 
+       */
+      _handleSearchResponse: function(e) {
+        // clear list
+        this.set("data", []);
+        // get data
+        var books = e.detail.detail.response;
+        if (books.length > 0) {
+          // hide add area
+          this.set("showAddArea", false);
+          // add item to list
+          books.forEach(function(book) {
+            this.push("data", book);
+          }.bind(this));
+        } else {
+          this._showMessage("No Books available! Please add this Book!");
+          // show add area
+          this.set("showAddArea", true);
+        }
+      },
+      /**
+       * END SEARCH
+       */
+
+      /**
+       * BEGIN ADD
+       */
+      /**
+       * 
+       */
+      _handleAddRequestCanceled: function() {
+        this._hideNotifyGetAll("Add new Book canceled!");
+      },
+      /**
+       * 
+       */
+      _handleAddRequestFinished: function(e) {
+        this._hideNotifyGetAll("Add new Book finished!");
+        // get data
+        var book = e.detail.detail.detail.response;
+        this.unshift("data", book);
+      },
+      /**
+       * END ADD
+       */
+
+      /**
+       * BEGIN APP
+       */
+      /**
+       * 
+       */
+      _handleRequestResponse: function(e) {
+        var tmp = e.detail.detail.response;
+        tmp.forEach(function(item) {
+          this.push("data", item);
+        }.bind(this));
+      },
+      /**
+       * 
+       */
+      _handleRequestError: function(e) {
+        if (e instanceof Event) {
+          this._showMessage(e.detail.detail.error.message ? e.detail.detail.error.message : "Error to load Data!");
+          return;
+        }
+        /**
+         * ToDo:
+         *  handle Error from Backend
+         */
+        this._showMessage("Backend Error: ToDo --> get Message");
+      },
+      /**
+       * 
+       */
+      _handleRequestFailed: function(e) {
+        this._showMessage(e.detail.msg);
+      },
+      /**
+       * END APP
+       */
+
+      /**
+       * 
+       */
+      ready: function() {
+        // data binding variable for add area
+        this.showAddArea = false;
+        // data binding variable for list
+        this.data = [];
+        // call all books on load
+        this._getAll();
       }
     });
   </script>
