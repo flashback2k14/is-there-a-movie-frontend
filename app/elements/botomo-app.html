@@ -105,6 +105,14 @@
         webserviceUrl: {
           type: String,
           value: ""
+        },
+        showAddArea: {
+          type: Boolean,
+          value: false
+        },
+        data: {
+          type: Array,
+          value: []
         }
       },
 
@@ -240,10 +248,6 @@
        * 
        */
       ready: function() {
-        // data binding variable for add area
-        this.showAddArea = false;
-        // data binding variable for list
-        this.data = [];
         // call all books on load
         this._getAll();
       }
