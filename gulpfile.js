@@ -5,10 +5,11 @@ var gulp = require("gulp");
 var ghPages = require("gulp-gh-pages");
 var gRun = require("gulp-run");
 var merge = require("merge-stream");
+var vulcanize = require('gulp-vulcanize');
 
 // delete build and dist folder
 gulp.task("clean", function() {
-  return del.sync(["build", "dist", "output"]);
+  return del.sync(["build", "dist", "output", ".publish"]);
 });
 
 gulp.task("clean-output", function() {
@@ -31,6 +32,13 @@ gulp.task("build", ["clean", "lint"], function() {
     })
     .exec()
     .pipe(gulp.dest("output/build"));
+});
+
+// vulcanize application
+gulp.task("vulcanize", function() {
+  return gulp.src("./app/elements/elements.html")
+    .pipe(vulcanize())
+    .pipe(gulp.dest("dist/elements"));
 });
 
 // copy application to dist
