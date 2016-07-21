@@ -42,10 +42,12 @@ gulp.task("vulcanize", function() {
 });
 
 // copy application to dist
-gulp.task("copy", ["build"], function() {
+gulp.task("copy", ["build", "vulcanize"], function() {
   // copy app to dist/app
   var app = gulp.src([
-      "./build/bundled/app/**/*"
+      "./build/bundled/app/**/*",
+      "!./build/bundled/app/bower_components",
+      "!./build/bundled/app/elements"
     ])
     .pipe(gulp.dest("dist/app"));
   //copy config to dist
