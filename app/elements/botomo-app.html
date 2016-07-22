@@ -104,13 +104,23 @@
       properties: {
         webserviceUrl: {
           type: String,
-          value: ""
+          value: "",
+          reflectToAttribute: true
         }
       },
 
       /**
        * BEGIN UTILS
        */
+      /**
+       * 
+       */
+      _setWebserviceUrl: function() {
+        var backendUrl = window.location.hostname.indexOf("localhost") !== -1 
+                            ? "http://localhost:8080/" 
+                            : "https://botomo.herokuapp.com/";
+        this.set("webserviceUrl", backendUrl);
+      },
       /**
        * 
        */
@@ -192,9 +202,6 @@
        */
       _handleAddRequestFinished: function(e) {
         this._hideNotifyGetAll("Add new Book finished!");
-        // get data
-        var book = e.detail.detail.detail.response;
-        this.unshift("data", book);
       },
       /**
        * END ADD
@@ -209,7 +216,7 @@
       _handleRequestResponse: function(e) {
         var tmp = e.detail.detail.response;
         tmp.forEach(function(item) {
-          this.push("data", item);
+          this.unshift("data", item);
         }.bind(this));
       },
       /**
@@ -224,7 +231,7 @@
          * ToDo:
          *  handle Error from Backend
          */
-        this._showMessage("Backend Error: ToDo --> get Message");
+        this._showMessage("Backend Error: ToDo --> get Message from Error");
       },
       /**
        * 
@@ -240,6 +247,8 @@
        * 
        */
       ready: function() {
+        // set webservice url from URL
+        this._setWebserviceUrl();
         // data binding variable for add area
         this.showAddArea = false;
         // data binding variable for list
