@@ -3,8 +3,9 @@
   "description": "Frontend for is-there-a-movie",
   "private": true,
   "scripts": {
-    "build": "gulp build",
+    "build": "gulp lint && mv gulpfile.js tmp.js &&  polymer build --entrypoint app/index.html && mv tmp.js gulpfile.js",
     "clean": "gulp clean",
+    "copy": "gulp clean && npm run build && gulp copy",
     "deploy": "gulp deploy",
     "lint": "gulp lint",
     "serve": "gulp serve",
@@ -18,7 +19,6 @@
     "gulp": "^3.9.1",
     "gulp-gh-pages": "^0.5.4",
     "gulp-run": "^1.7.1",
-    "gulp-vulcanize": "^6.1.0",
     "merge-stream": "^1.0.0"
   }
 }
