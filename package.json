@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "build": "polymer build --entrypoint app/index.html",
+    "clean": "rm -rf build node_modules",
+    "deploy": "npm run lint && gulp deploy",
     "lint": "polymer lint",
-    "rm-build": "rm -rf build/",
-    "serve-app": "polymer serve -o -p 8088",
-    "serve-build-b": "cd build/bundled/ && npm run serve-app",
-    "serve-build-u": "cd build/unbundled/ && npm run serve-app",
+    "serve": "polymer serve -o -p 8088",
+    "serve-bundled": "cd build/bundled/ && npm run serve",
+    "serve-unbundled": "cd build/unbundled/ && npm run serve",
+    "test": "polymer test",
     "test-skip-si": "polymer test --skip-selenium-install"
   }
 }

@@ -1,81 +1,22 @@
-<dom-module id="botomo-add">
+<html><head></head><body><dom-module id="botomo-add">
   <template>
-    <style>
-      .add {
-        @apply(--layout-vertical);
-        width: 100%;
-        margin-bottom: 20px;
-      }
+    <style>.add{@apply (--layout-vertical);width:100%;margin-bottom:20px;}.add__content{@apply (--layout-vertical);padding:20px 10px 20px 10px;background:#EEEEEE;color:#000000;}.add__content--title{@apply (--paper-font-headline);padding-left:20px;padding-bottom:20px;}.add__content--inputs{margin:-15px 20px 0 20px;padding-bottom:10px;@apply (--paper-font-title);}.add__content--inputs--colors{--paper-input-container-focus-color:var(--paper-pink-a400);}.add__buttons{@apply (--layout-horizontal);@apply (--layout-end-justified);padding:10px;background:#424242;color:#FFFFFF;}</style>
 
-      .add__content {
-        @apply(--layout-vertical);
-        padding: 20px 10px 20px 10px;
-        background: #EEEEEE;
-        color: #000000;
-      }
-      .add__content--title {
-        @apply(--paper-font-headline);
-        padding-left: 20px;
-        padding-bottom: 20px;
-      }
-      .add__content--inputs {
-        margin: -15px 20px 0 20px;
-        padding-bottom: 10px;
-        @apply(--paper-font-title);
-      }
-      .add__content--inputs--colors {
-        --paper-input-container-focus-color: var(--paper-pink-a400);
-      }
-
-      .add__buttons {
-        @apply(--layout-horizontal);
-        @apply(--layout-end-justified);
-        padding: 10px;
-        background: #424242;
-        color: #FFFFFF;
-      }
-    </style>
-
-    <!-- data area -->
-    <botomo-data 
-      id="bdRequester"
-      on-request-response="_handleRequestResponse">
+    
+    <botomo-data id="bdRequester" on-request-response="_handleRequestResponse">
     </botomo-data>
 
-    <!-- add area -->
+    
     <paper-material class="add" elevation="3">
       <div class="add__content">
         <div class="add__content--title">Add New Book</div>
-        <paper-input
-          id="txtTitle"
-          class="add__content--inputs add__content--inputs--colors"
-          type="text"
-          label="Enter the Book Title..."
-          tabindex="1">
+        <paper-input id="txtTitle" class="add__content--inputs add__content--inputs--colors" type="text" label="Enter the Book Title..." tabindex="1">
         </paper-input>
-        <paper-input
-          id="txtSubtitle"
-          class="add__content--inputs add__content--inputs--colors"
-          type="text"
-          label="Enter the Book Subtitle..."
-          tabindex="2">
+        <paper-input id="txtSubtitle" class="add__content--inputs add__content--inputs--colors" type="text" label="Enter the Book Subtitle..." tabindex="2">
         </paper-input>
-        <paper-input
-          id="txtAuthor"
-          class="add__content--inputs add__content--inputs--colors"
-          type="text"
-          label="Enter the Author..."
-          tabindex="3">
+        <paper-input id="txtAuthor" class="add__content--inputs add__content--inputs--colors" type="text" label="Enter the Author..." tabindex="3">
         </paper-input>
-        <paper-input
-          id="txtPublished"
-          class="add__content--inputs iadd__content--nputs--colors"
-          type="number"
-          min="1899" max="9999"
-          auto-validate
-          error-message="Input only between 1899 and 9999 valid!"
-          label="Enter the Publication Year..."
-          tabindex="4">
+        <paper-input id="txtPublished" class="add__content--inputs iadd__content--nputs--colors" type="number" min="1899" max="9999" auto-validate="" error-message="Input only between 1899 and 9999 valid!" label="Enter the Publication Year..." tabindex="4">
         </paper-input>
       </div>
       <div class="add__buttons">
@@ -86,73 +27,6 @@
 
   </template>
 
-  <script>
-    Polymer({
-      is: "botomo-add",
-      
-      /**
-       *
-       */
-      properties: {
-        webserviceUrl: {
-          type: String,
-          value: ""
-        },
-        data: {
-          type: Array,
-          value: []
-        }
-      },
-
-      /**
-       * 
-       */
-      _clearInputs: function() {
-        this.$.txtTitle.value = "";
-        this.$.txtSubtitle.value = "";
-        this.$.txtAuthor.value = "";
-        this.$.txtPublished.value = "";
-      },
-
-      /**
-       * 
-       */
-      _handleAddCancel: function() {
-        // clear inputs
-        this._clearInputs();
-        // send notification
-        this.fire("add-request-canceled");
-      },
-
-      /**
-       * 
-       */
-      _handleAdd: function() {
-        var options = {
-          url: this.webserviceUrl + "api/v1/books",
-          method: "POST",
-          body: {
-            title: this.$.txtTitle.value,
-            subtitle: this.$.txtSubtitle.value,
-            author: this.$.txtAuthor.value,
-            year: this.$.txtPublished.value,
-            ups: 0,
-            downs: 0
-          }
-        };
-
-        this.$.bdRequester.request(options);
-      },
-
-      /**
-       * 
-       */
-      _handleRequestResponse: function(e) {
-        // clear inputs
-        this._clearInputs();
-        // send notification
-        this.fire("add-request-finished", e);
-      }
-    });
-  </script>
+  <script>Polymer({is:"botomo-add",properties:{webserviceUrl:{type:String,value:""},data:{type:Array,value:[]}},_clearInputs:function(){this.$.txtTitle.value="",this.$.txtSubtitle.value="",this.$.txtAuthor.value="",this.$.txtPublished.value=""},_handleAddCancel:function(){this._clearInputs(),this.fire("add-request-canceled")},_handleAdd:function(){var t={url:this.webserviceUrl+"api/v1/books",method:"POST",body:{title:this.$.txtTitle.value,subtitle:this.$.txtSubtitle.value,author:this.$.txtAuthor.value,year:this.$.txtPublished.value,ups:0,downs:0}};this.$.bdRequester.request(t)},_handleRequestResponse:function(t){this._clearInputs(),this.fire("add-request-finished",t)}});</script>
 </dom-module>
+</body></html>

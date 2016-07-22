@@ -1,103 +1,21 @@
-<dom-module id="botomo-search">
+<html><head></head><body><dom-module id="botomo-search">
   <template>
-    <style>
-      .app__search--card {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        padding: 10px;
-        background: #424242;
-      }
+    <style>.app__search--card{@apply (--layout-horizontal);@apply (--layout-center);padding:10px;background:#424242;}.inputs{@apply (--layout-flex);margin:-15px 20px 0 20px;@apply (--paper-font-title);}.inputs--colors{--paper-input-container-color:#fff;--paper-input-container-focus-color:var(--paper-pink-a400);--paper-input-container-input-color:#fff;}.btns{width:200px;margin-top:0;background:var(--paper-pink-a400);@apply (--paper-font-button);}.btns:hover{background:var(--paper-pink-a700);}</style>
 
-      .inputs {
-        @apply(--layout-flex);
-        margin: -15px 20px 0 20px;
-        @apply(--paper-font-title);
-      }
-      .inputs--colors {
-        --paper-input-container-color: #fff;
-        --paper-input-container-focus-color: var(--paper-pink-a400);
-        --paper-input-container-input-color: #fff;
-      }
-
-      .btns {
-        width: 200px;
-        margin-top: 0;
-        background: var(--paper-pink-a400);
-        @apply(--paper-font-button);
-      }
-      .btns:hover {
-        background: var(--paper-pink-a700);
-      }
-    </style>
-
-    <!-- data area -->
-    <botomo-data 
-      id="bdRequester"
-      on-request-response="_handleRequestResponse">
+    
+    <botomo-data id="bdRequester" on-request-response="_handleRequestResponse">
     </botomo-data>
 
-    <!-- search area -->
+    
     <paper-material class="app__search--card" elevation="3">
-      <paper-input
-        id="txtSearchRequest"
-        class="inputs inputs--colors"
-        type="text"
-        label="Enter your Search Request..."
-        tabindex="1">
+      <paper-input id="txtSearchRequest" class="inputs inputs--colors" type="text" label="Enter your Search Request..." tabindex="1">
       </paper-input>
-      <paper-button
-        class="btns"
-        on-tap="_sendSearchRequest"
-        raised
-        tabindex="2">Search
+      <paper-button class="btns" on-tap="_sendSearchRequest" raised="" tabindex="2">Search
       </paper-button>
     </paper-material>
 
   </template>
 
-  <script>
-    Polymer({
-      is: "botomo-search",
-      
-      /**
-       * 
-       */
-      properties: {
-        webserviceUrl: {
-          type: String,
-          value: ""
-        }
-      },
-
-      /**
-       *
-       */
-      _sendSearchRequest: function() {
-        var searchTerm = this.$.txtSearchRequest.value;
-
-        if (searchTerm.length > 0) {
-          if (searchTerm === "*") {
-            this.fire("search-all");
-          } else {
-            var options = {
-              url: this.webserviceUrl + "api/v1/books",
-              params: {
-                "search": searchTerm
-              }
-            };
-            this.$.bdRequester.request(options);
-          }
-        } else {
-          this.fire("request-failed", {msg: "No Search term available!"});
-        }
-      },
-
-      /**
-       * 
-       */
-      _handleRequestResponse: function(e) {
-        this.fire("search-response", e.detail);
-      }
-    });
-  </script>
+  <script>Polymer({is:"botomo-search",properties:{webserviceUrl:{type:String,value:""}},_sendSearchRequest:function(){var e=this.$.txtSearchRequest.value;if(e.length>0)if("*"===e)this.fire("search-all");else{var s={url:this.webserviceUrl+"api/v1/books",params:{search:e}};this.$.bdRequester.request(s)}else this.fire("request-failed",{msg:"No Search term available!"})},_handleRequestResponse:function(e){this.fire("search-response",e.detail)}});</script>
 </dom-module>
+</body></html>

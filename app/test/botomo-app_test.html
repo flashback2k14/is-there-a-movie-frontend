@@ -1,13 +1,10 @@
-<!doctype html>
-
-<html>
-  <head>
+<!DOCTYPE html><html><head>
     <title>botomo-app test</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,user-scalable=yes">
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
-    <link rel="import" href="../elements/botomo-app.html">
+    <link rel="import" href="../elements/elements.html">
   </head>
   <body>
 
@@ -17,15 +14,7 @@
       </template>
     </test-fixture>
 
-    <script>
-      suite("botomo-app", function() {
+    <script>suite("botomo-app",function(){test("instantiating the element works",function(){var t=fixture("basic");assert.equal(t.is,"botomo-app")})});</script>
+  
 
-        test("instantiating the element works", function() {
-          var element = fixture("basic");
-          assert.equal(element.is, "botomo-app");
-        });
-
-      });
-    </script>
-  </body>
-</html>
+</body></html>
