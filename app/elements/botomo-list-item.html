@@ -111,7 +111,7 @@
 
       _handleUpvote: function() {
         var options = {
-          url: this.webserviceUrl + "api/v1/books/" + this.item.id + "/upvote",
+          url: this.webserviceUrl + "api/v1/books/" + this.item._id + "/upvote",
           method: "POST"
         };
         this.$.bdRequester.request(options);
@@ -119,7 +119,7 @@
 
       _handleDownvote: function() {
         var options = {
-          url: this.webserviceUrl + "api/v1/books/" + this.item.id + "/downvote",
+          url: this.webserviceUrl + "api/v1/books/" + this.item._id + "/downvote",
           method: "POST"
         };
         this.$.bdRequester.request(options);
