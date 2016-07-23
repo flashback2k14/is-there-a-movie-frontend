@@ -1,15 +1,25 @@
 // imports
 var del = require("del");
 var gulp = require("gulp");
+var newFile = require("gulp-file");
 var ghPages = require("gulp-gh-pages");
 var gRun = require("gulp-run");
 var merge = require("merge-stream");
 
+// path for deployment folder
+var GHPAGES = "ghpages/dist/app";
+
+// return correct path
+function _path(path) {
+  return path ? GHPAGES + path : GHPAGES;
+}
+
 // delete build and dist folder
 gulp.task("clean", function() {
-  return del.sync(["build", "dist", ".publish"]);
+  return del.sync(["build", "ghPages", ".publish"]);
 });
 
+// delete output folder
 gulp.task("clean-output", function() {
   return del.sync("output");
 })
@@ -29,17 +39,17 @@ gulp.task("copy", function() {
   var bcwc = gulp.src([
       "./build/bundled/app/bower_components/webcomponentsjs/webcomponents-lite.min.js",
     ])
-    .pipe(gulp.dest("dist/app/bower_components/webcomponentsjs"));
+    .pipe(gulp.dest(_path("/bower_components/webcomponentsjs")));
   // copy promise-polyfill to dist/app
   var bcpp = gulp.src([
     "./build/bundled/app/bower_components/promise-polyfill/**/*"
   ])
-  .pipe(gulp.dest("dist/app/bower_components/promise-polyfill"));
+  .pipe(gulp.dest(_path("/bower_components/promise-polyfill")));
   // copy elements to dist/app
   var elem = gulp.src([
     "./build/bundled/app/elements/elements.html"
   ])
-  .pipe(gulp.dest("dist/app/elements"));
+  .pipe(gulp.dest(_path("/elements")));
   // copy images, styles, scripts to dist/app
   var rest = gulp.src([
     "./build/bundled/app/**/*",
@@ -47,7 +57,7 @@ gulp.task("copy", function() {
     "!./build/bundled/app/elements/**/*",
     "!./build/bundled/app/test/**/*"
   ])
-  .pipe(gulp.dest("dist/app"));
+  .pipe(gulp.dest(_path()));
   //copy config to dist
   var config = gulp.src([
       "./build/bundled/polymer.json",
@@ -55,14 +65,23 @@ gulp.task("copy", function() {
       "./build/bundled/sw-precache-config.js",
       "./build/bundled/bower.json"
     ])
-    .pipe(gulp.dest("dist"));
+    .pipe(gulp.dest("ghpages/dist"));
   // merge streams
   return merge(bcwc, bcpp, elem, rest, config);
 });
 
+// create index.html for gh-pages
+gulp.task("create-index", function() {
+  var newIndex = newFile(
+    "index.html",
+    "<META http-equiv=refresh content='0;URL=dist/app/'>",
+    {src: true}
+  ).pipe(gulp.dest("ghPages"));
+});
+
 // deploy dist to gh-pages
-gulp.task("deploy", ["copy"], function() {
-  return gulp.src("./dist/**/*")
+gulp.task("deploy", function() {
+  return gulp.src("./ghPages/**/*")
     .pipe(ghPages());
 });
 

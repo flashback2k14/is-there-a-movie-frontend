@@ -3,10 +3,11 @@
   "description": "Frontend for is-there-a-movie",
   "private": true,
   "scripts": {
-    "build": "gulp lint && mv gulpfile.js tmp.js &&  polymer build --entrypoint app/index.html && mv tmp.js gulpfile.js",
+    "build": "gulp lint && mv gulpfile.js tmp.js && polymer build --entrypoint app/index.html && mv tmp.js gulpfile.js",
     "clean": "gulp clean",
+    "clean-all": "gulp clean && gulp clean-output",
     "copy": "gulp clean && npm run build && gulp copy",
-    "deploy": "gulp deploy",
+    "deploy": "npm run copy && gulp create-index && gulp deploy && npm run clean-all",
     "lint": "gulp lint",
     "serve": "gulp serve",
     "serve-bundled": "gulp serve-bundled",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "del": "^2.2.1",
     "gulp": "^3.9.1",
+    "gulp-file": "^0.3.0",
     "gulp-gh-pages": "^0.5.4",
     "gulp-run": "^1.7.1",
     "merge-stream": "^1.0.0"
