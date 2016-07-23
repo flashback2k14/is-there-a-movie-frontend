@@ -1,9 +1,0 @@
-<html><head></head><body><dom-module id="botomo-data">
-  <template>
-    <iron-ajax id="iaDataRequester" handle-as="json" on-response="_handleResponse" on-error="_handleError">
-    </iron-ajax>
-  </template>
-
-  <script>Polymer({is:"botomo-data",request:function(e){if(e){var a=e.header||{Accept:"application/json","Content-Type":"application/json"},t=e.method||"GET",s=e.url||"",i=e.params||{},r=e.body||{};s.length>0?(this.$.iaDataRequester.headers=a,this.$.iaDataRequester.method=t,this.$.iaDataRequester.url=s,null!==i&&(this.$.iaDataRequester.params=i),"GET"!==t&&null!==r&&(this.$.iaDataRequester.body=r),this.$.iaDataRequester.generateRequest()):this.fire("request-failed",{msg:"No URL Parameter available!"})}else this.fire("request-failed",{msg:"No Options Menu available!"})},_handleResponse:function(e){this.fire("request-response",e)},_handleError:function(e){this.fire("request-error",e)}});</script>
-</dom-module>
-</body></html>
