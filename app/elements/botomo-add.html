@@ -93,7 +93,7 @@
   <script>
     Polymer({
       is: "botomo-add",
-      
+
       /**
        *
        */
@@ -139,8 +139,8 @@
         }
 
         // check year is valid
-        var validYear = /[1-9]{4}/;
-        if (!this.$.txtPublished.value.match(validYear)) {
+        var validYear = /\d{4}/;
+        if (!validYear.test(this.$.txtPublished.value)) {
           this.$.txtPublished.validate();
           return;
         }
@@ -171,6 +171,28 @@
         this._clearInputs();
         // send notification
         this.fire("add-request-finished", e);
+      },
+
+      /**
+       * GOODREADS
+       */
+      /**
+       * 
+       */
+      addTitleFromGoodreads: function(title) {
+        this.$.txtTitle.value = title;
+      },
+      /**
+       * 
+       */
+      addAuthorFromGoodreads: function(author) {
+        this.$.txtAuthor.value = author;
+      },
+      /**
+       * 
+       */
+      addYearFromGoodreads: function(year) {
+        this.$.txtPublished.value = year;
       }
     });
   </script>

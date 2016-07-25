@@ -7,9 +7,6 @@
       .app--centering {
         @apply(--layout-center);
       }
-      .app--centering__horizontal {
-        @apply(--layout-horizontal);
-      }
 
       .app__title {
         margin-top: 50px;
@@ -29,6 +26,9 @@
       }
       .app__content--list {
         width: 50%;
+      }
+      .app__content--list--margin {
+        margin-top: 30px;
       }
 
       .app__info {
@@ -66,7 +66,7 @@
 
       <!-- add area -->
       <template is="dom-if" if="{{showAddArea}}">
-        <div class="app app--centering app__content" id="addArea">
+        <div class="app app--centering app__content">
           <botomo-add
             class="app__content--add"
             webservice-url="[[webserviceUrl]]"
@@ -78,27 +78,32 @@
 
           <template is="dom-if" if="{{showGoodreadsList}}">
             <botomo-list
-              class="app__content--list"
+              class="app__content--list app__content--list--margin"
               webservice-url="[[webserviceUrl]]"
               item-type="goodread"
               data="{{data}}"
               on-request-error="_handleRequestError"
-              on-request-failed="_handleRequestFailed">
+              on-request-failed="_handleRequestFailed"
+              on-add-title-from-goodreads="_handleAddTitleFromGoodreads"
+              on-add-author-from-goodreads="_handleAddAuthorFromGoodreads"
+              on-add-year-from-goodreads="_handleAddYearFromGoodreads">
             </botomo-list>
           </template>
         </div>
       </template>
     
       <!-- list area -->
-      <div class="app app--centering app__content">
-        <botomo-list
-          class="app__content--list"
-          webservice-url="[[webserviceUrl]]"
-          data="{{data}}"
-          on-request-error="_handleRequestError"
-          on-request-failed="_handleRequestFailed">
-        </botomo-list>
-      </div>
+      <template is="dom-if" if="{{!showAddArea}}">
+        <div class="app app--centering app__content">
+          <botomo-list
+            class="app__content--list"
+            webservice-url="[[webserviceUrl]]"
+            data="{{data}}"
+            on-request-error="_handleRequestError"
+            on-request-failed="_handleRequestFailed">
+          </botomo-list>
+        </div>
+      </template>
 
       <!-- toast area -->
       <paper-toast id="infoToast" class="app__info"></paper-toast>
@@ -167,7 +172,7 @@
        */
       _getAllFromGoodreads: function(searchTerm) {
         var options = {
-          url: this.webserviceUrl + "api/v1/books",
+          url: this.webserviceUrl + "api/v1/goodreads",
           params: {
             "search": searchTerm
           }
@@ -244,18 +249,26 @@
         this._hideNotifyGetAll("Add new Book finished!");
       },
       /**
+       * 
+       */
+      _handleAddTitleFromGoodreads: function(e) {
+        this.$$("botomo-add").addTitleFromGoodreads(e.detail);
+      },
+      /**
+       * 
+       */
+      _handleAddAuthorFromGoodreads: function(e) {
+        this.$$("botomo-add").addAuthorFromGoodreads(e.detail);
+      },
+      /**
+       * 
+       */
+      _handleAddYearFromGoodreads: function(e) {
+        this.$$("botomo-add").addYearFromGoodreads(e.detail);
+      },
+      /**
        * END ADD
        */
-
-      _handleGoodreadsListView: function() {
-        // 
-        if (this.$.addArea.classList.contains("app")) {
-          this.$.addArea.classList.remove("app");
-          this.$.addArea.classList.add("app--centering__horizontal");
-        }
-        // set variable
-        this.set("showGoodreadsList", true);
-      },
 
       /**
        * BEGIN APP
@@ -268,7 +281,7 @@
         var books = e.detail.detail.response;
         // show good reads list
         if (books.length > 0 && this.showAddArea) {
-          this._handleGoodreadsListView();
+          this.set("showGoodreadsList", true);
         }
         // push books into data binding
         books.forEach(function(book) {
