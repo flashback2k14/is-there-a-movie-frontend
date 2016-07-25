@@ -700,7 +700,7 @@ t},updateStyles:function(e){e&&this.mixin(this.customStyle,e),i?t.updateNativeSt
     </iron-ajax>
   </template>
 
-  <script>Polymer({is:"botomo-data",request:function(e){if(e){var a=e.header||{Accept:"application/json","Content-Type":"application/json"},t=e.method||"GET",s=e.url||"",i=e.params||{},r=e.body||{};s.length>0?(this.$.iaDataRequester.headers=a,this.$.iaDataRequester.method=t,this.$.iaDataRequester.url=s,null!==i&&(this.$.iaDataRequester.params=i),"GET"!==t&&null!==r&&(this.$.iaDataRequester.body=r),this.$.iaDataRequester.generateRequest()):this.fire("request-failed",{msg:"No URL Parameter available!"})}else this.fire("request-failed",{msg:"No Options Menu available!"})},_handleResponse:function(e){this.fire("request-response",e)},_handleError:function(e){this.fire("request-error",e)}});</script>
+  <script>Polymer({is:"botomo-data",request:function(e){if(e){var a=e.header||{Accept:"application/json","Content-Type":"application/json"},t=e.method||"GET",s=e.url||"",i=e.params||{},r=e.body||{};s.length>0?(this.$.iaDataRequester.headers=a,this.$.iaDataRequester.method=t,this.$.iaDataRequester.url=s,null!==i&&(this.$.iaDataRequester.params=i),"GET"!==t&&null!==r&&(this.$.iaDataRequester.body=r),this.$.iaDataRequester.generateRequest()):this.fire("request-failed",{msg:"No URL Parameter available!"})}else this.fire("request-failed",{msg:"No Options available!"})},_handleResponse:function(e){this.fire("request-response",e)},_handleError:function(e){this.fire("request-error",e)}});</script>
 </dom-module>
 <dom-module id="botomo-search" assetpath="/">
   <template>
@@ -720,7 +720,7 @@ t},updateStyles:function(e){e&&this.mixin(this.customStyle,e),i?t.updateNativeSt
 
   </template>
 
-  <script>Polymer({is:"botomo-search",properties:{webserviceUrl:{type:String,value:""}},_sendSearchRequest:function(){var e=this.$.txtSearchRequest.value;if(e.length>0)if("*"===e)this.fire("search-all");else{var s={url:this.webserviceUrl+"api/v1/books",params:{search:e}};this.$.bdRequester.request(s)}else this.fire("request-failed",{msg:"No Search term available!"})},_handleRequestResponse:function(e){this.fire("search-response",{books:e.detail.detail.response,searchterm:this.$.txtSearchRequest.value}),this.$.txtSearchRequest.value=""}});</script>
+  <script>Polymer({is:"botomo-search",properties:{webserviceUrl:{type:String,value:""}},_sendSearchRequest:function(){var e=this.$.txtSearchRequest.value;if(e.length>0)if("*"===e)this.fire("search-all");else{var s={url:this.webserviceUrl+"api/v1/books",params:{search:e}};this.$.bdRequester.request(s)}else this.fire("search-all")},_handleRequestResponse:function(e){this.fire("search-response",{books:e.detail.detail.response,searchterm:this.$.txtSearchRequest.value}),this.$.txtSearchRequest.value=""}});</script>
 </dom-module>
 <dom-module id="botomo-list" assetpath="/">
   <template>
