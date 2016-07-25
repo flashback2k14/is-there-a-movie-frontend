@@ -19,7 +19,7 @@
         padding-bottom: 20px;
       }
       .add__content--inputs {
-        margin: -15px 20px 0 20px;
+        margin: -15px 20px 5px 20px;
         padding-bottom: 10px;
         @apply(--paper-font-title);
       }
@@ -51,6 +51,9 @@
           class="add__content--inputs add__content--inputs--colors"
           type="text"
           label="Enter the Book Title..."
+          required 
+          auto-validate 
+          error-message="Empty Title is not vaild!"
           tabindex="1">
         </paper-input>
         <paper-input
@@ -70,11 +73,12 @@
         <paper-input
           id="txtPublished"
           class="add__content--inputs iadd__content--nputs--colors"
-          type="number"
-          min="1899" max="9999"
-          auto-validate
-          error-message="Input only between 1899 and 9999 valid!"
+          type="text"
           label="Enter the Publication Year..."
+          required
+          auto-validate
+          pattern="[0-9]{4}"
+          error-message="Year only between 1000 and 9999 valid!"
           tabindex="4">
         </paper-input>
       </div>
@@ -128,6 +132,20 @@
        * 
        */
       _handleAdd: function() {
+        // check title if not empty
+        if (this.$.txtTitle.value.length <= 0) {
+          this.$.txtTitle.validate();
+          return;
+        }
+
+        // check year is valid
+        var validYear = /[1-9]{4}/;
+        if (!this.$.txtPublished.value.match(validYear)) {
+          this.$.txtPublished.validate();
+          return;
+        }
+
+        // create options object
         var options = {
           url: this.webserviceUrl + "api/v1/books",
           method: "POST",
@@ -141,6 +159,7 @@
           }
         };
 
+        // send request
         this.$.bdRequester.request(options);
       },
 
