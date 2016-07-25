@@ -1,50 +1,6 @@
 <dom-module id="botomo-list-item">
   <template>
-    <style>
-      .item {
-        @apply(--layout-horizontal);
-        width: 100%;
-        margin-bottom: 20px;
-      }
-      .item--centering {
-        @apply(--layout-vertical);
-        @apply(--layout-center);
-      }
-
-      .item__left {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
-        width: 25%;
-        background: #424242;
-        color: #FFFFFF;
-      }
-      .item__left--text {
-        @apply(--paper-font-headline);
-        padding: 10px 0 10px 0;
-      }
-
-      .item__right {
-        @apply(--layout-vertical);
-        width: 75%;
-        padding: 10px 10px 10px 30px;
-        background: #EEEEEE;
-        color: #000000;
-      }
-      .item__right--title {
-        @apply(--paper-font-display1);
-        padding-bottom: 5px;
-      }
-      .item__right--subtitle {
-        @apply(--paper-font-headline);
-        margin-bottom: 30px;
-      }
-      .item__right--text {
-        @apply(--paper-font-subhead);
-      }
-      .item__right--text--padding {
-        padding-bottom: 5px;
-      }
-    </style>
+    <style include="botomo-list-item-styling"></style>
 
     <!-- data ares -->
     <botomo-data 

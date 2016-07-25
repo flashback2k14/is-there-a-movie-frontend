@@ -27,6 +27,9 @@
       .app__content--list {
         width: 50%;
       }
+      .app__content--list--margin {
+        margin-top: 30px;
+      }
 
       .app__info {
         --paper-toast-background-color: var(--paper-red-a400);
@@ -72,20 +75,35 @@
             on-request-error="_handleRequestError"
             on-request-failed="_handleRequestFailed">
           </botomo-add>
+
+          <template is="dom-if" if="{{showGoodreadsList}}">
+            <botomo-list
+              class="app__content--list app__content--list--margin"
+              webservice-url="[[webserviceUrl]]"
+              item-type="goodread"
+              data="{{data}}"
+              on-request-error="_handleRequestError"
+              on-request-failed="_handleRequestFailed"
+              on-add-title-from-goodreads="_handleAddTitleFromGoodreads"
+              on-add-author-from-goodreads="_handleAddAuthorFromGoodreads"
+              on-add-year-from-goodreads="_handleAddYearFromGoodreads">
+            </botomo-list>
+          </template>
         </div>
       </template>
     
       <!-- list area -->
-      <div class="app app--centering app__content">
-        <botomo-list
-          id="bList"
-          class="app__content--list"
-          webservice-url="[[webserviceUrl]]"
-          data="{{data}}"
-          on-request-error="_handleRequestError"
-          on-request-failed="_handleRequestFailed">
-        </botomo-list>
-      </div>
+      <template is="dom-if" if="{{!showAddArea}}">
+        <div class="app app--centering app__content">
+          <botomo-list
+            class="app__content--list"
+            webservice-url="[[webserviceUrl]]"
+            data="{{data}}"
+            on-request-error="_handleRequestError"
+            on-request-failed="_handleRequestFailed">
+          </botomo-list>
+        </div>
+      </template>
 
       <!-- toast area -->
       <paper-toast id="infoToast" class="app__info"></paper-toast>
@@ -108,6 +126,10 @@
           reflectToAttribute: true
         },
         showAddArea: {
+          type: Boolean,
+          value: false
+        },
+        showGoodreadsList: {
           type: Boolean,
           value: false
         },
@@ -148,9 +170,21 @@
       /**
        * 
        */
+      _getAllFromGoodreads: function(searchTerm) {
+        var options = {
+          url: this.webserviceUrl + "api/v1/goodreads",
+          params: {
+            "search": searchTerm
+          }
+        };
+        this.$.bdRequester.request(options);
+      },
+      /**
+       * 
+       */
       _hideNotifyGetAll: function(msg) {
         this.set("showAddArea", false);
-        this._showMessage("Add new Book canceled!");
+        this._showMessage(msg);
         this._getAll();
       },
       /**
@@ -178,7 +212,7 @@
         // clear list
         this.set("data", []);
         // get data
-        var books = e.detail.detail.response;
+        var books = e.detail.books;
         if (books.length > 0) {
           // hide add area
           this.set("showAddArea", false);
@@ -187,6 +221,9 @@
             this.push("data", book);
           }.bind(this));
         } else {
+          // call goodreads API
+          this._getAllFromGoodreads(e.detail.searchterm);
+          // notify user
           this._showMessage("No Books available! Please add this Book!");
           // show add area
           this.set("showAddArea", true);
@@ -212,6 +249,24 @@
         this._hideNotifyGetAll("Add new Book finished!");
       },
       /**
+       * 
+       */
+      _handleAddTitleFromGoodreads: function(e) {
+        this.$$("botomo-add").addTitleFromGoodreads(e.detail);
+      },
+      /**
+       * 
+       */
+      _handleAddAuthorFromGoodreads: function(e) {
+        this.$$("botomo-add").addAuthorFromGoodreads(e.detail);
+      },
+      /**
+       * 
+       */
+      _handleAddYearFromGoodreads: function(e) {
+        this.$$("botomo-add").addYearFromGoodreads(e.detail);
+      },
+      /**
        * END ADD
        */
 
@@ -222,9 +277,15 @@
        * 
        */
       _handleRequestResponse: function(e) {
-        var tmp = e.detail.detail.response;
-        tmp.forEach(function(item) {
-          this.unshift("data", item);
+        // get books
+        var books = e.detail.detail.response;
+        // show good reads list
+        if (books.length > 0 && this.showAddArea) {
+          this.set("showGoodreadsList", true);
+        }
+        // push books into data binding
+        books.forEach(function(book) {
+          this.unshift("data", book);
         }.bind(this));
       },
       /**

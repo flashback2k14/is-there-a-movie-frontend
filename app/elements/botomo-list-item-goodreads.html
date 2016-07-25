@@ -1,0 +1,113 @@
+<dom-module id="botomo-list-item-goodreads">
+  <template>
+    <style include="botomo-list-item-styling">
+      .item--centering__margin {
+        margin-bottom: 20px;
+      }
+      .item__right--row {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+
+      .item__right--title:hover,
+      .item__right--text:hover {
+        font-weight: 600;
+        cursor: pointer;
+      }
+      
+      .item__right--tooltip {
+        --paper-tooltip: {
+          width: 120px;
+          text-align: center;
+        }
+      }
+    </style>
+
+    <!--
+      TODO: 
+        ADD TOOLTIPS
+    -->
+
+    <!-- list item -->
+    <paper-material class="item" elevation="3">
+      <div class="item__left item--centering">
+        <iron-image
+          class="item__left--image"
+          id="imgBook"
+          preload fade
+          alt="Book Image." 
+          sizing="contain"
+          src="[[item.image]]">
+        </iron-image>
+      </div>
+      <div class="item__right">
+        <div class="item--centering item--centering__margin">
+          <div class="item__right--title" on-tap="_sendTitleToAdd">
+            [[item.title]]
+          </div>
+          <paper-tooltip class="item__right--tooltip" position="right">Add Title to new Book!</paper-tooltip>
+        </div>
+        <div class="item__right--row">
+          <div class="item__right--text item__right--text--padding" on-tap="_sendAuthorToAdd">
+            written by [[item.author]]
+          </div>
+          <paper-tooltip class="item__right--tooltip" position="right">Add Author to new Book!</paper-tooltip>
+        </div>
+        <div class="item__right--row">
+          <div class="item__right--text" on-tap="_sendYearToAdd">
+            published in [[item.year]]
+          </div>
+          <paper-tooltip class="item__right--tooltip" position="right">Add Year to new Book!</paper-tooltip>
+        </div>
+      </div>
+    </paper-material>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "botomo-list-item-goodreads",
+      
+      /**
+       *
+       */
+      properties: {
+        webserviceUrl: {
+          type: String,
+          value: ""
+        },
+        item: {
+          type: Object,
+          value: {}
+        }
+      }, 
+
+      /**
+       * 
+       */
+      _sendTitleToAdd: function() {
+        this.fire("add-title-from-goodreads", this.item.title);
+      },
+
+      /**
+       * 
+       */
+      _sendAuthorToAdd: function() {
+        this.fire("add-author-from-goodreads", this.item.author);
+      },
+
+      /**
+       * 
+       */
+      _sendYearToAdd: function() {
+        this.fire("add-year-from-goodreads", this.item.year);
+      },
+      /**
+       * 
+       */
+      ready: function() {
+        this.$.imgBook.placeholder = this.resolveUrl("../images/app-icon.svg");
+      }
+    });
+  </script>
+</dom-module>
