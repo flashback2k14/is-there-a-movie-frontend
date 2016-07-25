@@ -1,13 +1,21 @@
 <dom-module id="botomo-list">
   <template>
-
     <template is="dom-repeat" items="[[data]]">
-      <botomo-list-item 
-        webservice-url=[[webserviceUrl]] 
-        item="[[item]]">
-      </botomo-list-item>
+      <!-- Show MongoDB List -->
+      <template is="dom-if" if="{{_handleViewState()}}">
+        <botomo-list-item 
+          webservice-url=[[webserviceUrl]] 
+          item="[[item]]">
+        </botomo-list-item>
+      </template>
+      <!-- Show Goodreads List -->
+      <template is="dom-if" if="{{!_handleViewState()}}">
+        <botomo-list-item-goodreads
+          webservice-url=[[webserviceUrl]] 
+          item="[[item]]">
+        </botomo-list-item-goodreads>
+      </template>
     </template>
-
   </template>
 
   <script>
@@ -22,10 +30,22 @@
           type: String,
           value: ""
         },
+        itemType: {
+          type: String,
+          value: "normal",
+          reflectToAttribute: true
+        },
         data: {
           type: Array,
           value: []
         }
+      },
+
+      /**
+       * 
+       */
+      _handleViewState: function() {
+        return this.itemType === "normal";
       }
     });
   </script>

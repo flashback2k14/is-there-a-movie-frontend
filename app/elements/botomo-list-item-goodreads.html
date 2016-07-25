@@ -1,10 +1,74 @@
 <dom-module id="botomo-list-item-goodreads">
   <template>
-    <style>
-
+    <style include="botomo-list-item-styling">
+      .item--centering__horizontal {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        margin-bottom: 20px;
+      }
+      .item__right--row {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+      .item__right--button__title--margin {
+        margin-left: 30px;
+      }
+      .item__right--button__rest--margin {
+        margin-top: -10px;
+        margin-left: 30px;
+      }
     </style>
 
+    <!--
+      TODO: 
+        ADD TOOLTIPS
+    -->
 
+    <!-- list item -->
+    <paper-material class="item" elevation="3">
+      <div class="item__left item--centering">
+        <iron-image
+          class="item__left--image"
+          id="imgBook"
+          preload fade
+          alt="Book Image." 
+          sizing="contain"
+          src="[[item.image]]">
+        </iron-image>
+      </div>
+      <div class="item__right">
+        <div class="item--centering__horizontal">
+          <div class="item__right--title">
+            [[item.title]]
+          </div>
+          <paper-icon-button
+            class="item__right--button__title--margin"
+            icon="assignment-return"
+            on-tap="_sendTitleToAdd">
+          </paper-icon-button>
+        </div>
+        <div class="item__right--row">
+          <div class="item__right--text item__right--text--padding">
+            written by [[item.author]]
+          </div>
+          <paper-icon-button
+            class="item__right--button__rest--margin"
+            icon="assignment-return"
+            on-tap="_sendAuthorToAdd">
+          </paper-icon-button>
+        </div>
+        <div class="item__right--row">
+          <div class="item__right--text">
+            published in [[item.year]]
+          </div>
+          <paper-icon-button
+            class="item__right--button__rest--margin"
+            icon="assignment-return"
+            on-tap="_sendYearToAdd">
+          </paper-icon-button>
+        </div>
+      </div>
+    </paper-material>
 
   </template>
 
@@ -24,6 +88,36 @@
           type: Object,
           value: {}
         }
+      }, 
+
+      /**
+       * 
+       */
+      _sendTitleToAdd: function() {
+        console.log("Todo", this.item.title);
+        this.fire("add-title-from-goodreads", this.item.title);
+      },
+
+      /**
+       * 
+       */
+      _sendAuthorToAdd: function() {
+        console.log("Todo", this.item.author);
+        this.fire("add-author-from-goodreads", this.item.author);
+      },
+
+      /**
+       * 
+       */
+      _sendYearToAdd: function() {
+        console.log("Todo", this.item.year);
+        this.fire("add-year-from-goodreads", this.item.year);
+      },
+      /**
+       * 
+       */
+      ready: function() {
+        this.$.imgBook.placeholder = this.resolveUrl("../images/app-icon.svg");
       }
     });
   </script>

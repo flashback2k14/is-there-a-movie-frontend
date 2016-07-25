@@ -7,6 +7,9 @@
       .app--centering {
         @apply(--layout-center);
       }
+      .app--centering__horizontal {
+        @apply(--layout-horizontal);
+      }
 
       .app__title {
         margin-top: 50px;
@@ -63,7 +66,7 @@
 
       <!-- add area -->
       <template is="dom-if" if="{{showAddArea}}">
-        <div class="app app--centering app__content">
+        <div class="app app--centering app__content" id="addArea">
           <botomo-add
             class="app__content--add"
             webservice-url="[[webserviceUrl]]"
@@ -72,13 +75,23 @@
             on-request-error="_handleRequestError"
             on-request-failed="_handleRequestFailed">
           </botomo-add>
+
+          <template is="dom-if" if="{{showGoodreadsList}}">
+            <botomo-list
+              class="app__content--list"
+              webservice-url="[[webserviceUrl]]"
+              item-type="goodread"
+              data="{{data}}"
+              on-request-error="_handleRequestError"
+              on-request-failed="_handleRequestFailed">
+            </botomo-list>
+          </template>
         </div>
       </template>
     
       <!-- list area -->
       <div class="app app--centering app__content">
         <botomo-list
-          id="bList"
           class="app__content--list"
           webservice-url="[[webserviceUrl]]"
           data="{{data}}"
@@ -108,6 +121,10 @@
           reflectToAttribute: true
         },
         showAddArea: {
+          type: Boolean,
+          value: false
+        },
+        showGoodreadsList: {
           type: Boolean,
           value: false
         },
@@ -148,6 +165,18 @@
       /**
        * 
        */
+      _getAllFromGoodreads: function(searchTerm) {
+        var options = {
+          url: this.webserviceUrl + "api/v1/books",
+          params: {
+            "search": searchTerm
+          }
+        };
+        this.$.bdRequester.request(options);
+      },
+      /**
+       * 
+       */
       _hideNotifyGetAll: function(msg) {
         this.set("showAddArea", false);
         this._showMessage(msg);
@@ -178,7 +207,7 @@
         // clear list
         this.set("data", []);
         // get data
-        var books = e.detail.detail.response;
+        var books = e.detail.books;
         if (books.length > 0) {
           // hide add area
           this.set("showAddArea", false);
@@ -187,6 +216,9 @@
             this.push("data", book);
           }.bind(this));
         } else {
+          // call goodreads API
+          this._getAllFromGoodreads(e.detail.searchterm);
+          // notify user
           this._showMessage("No Books available! Please add this Book!");
           // show add area
           this.set("showAddArea", true);
@@ -215,6 +247,16 @@
        * END ADD
        */
 
+      _handleGoodreadsListView: function() {
+        // 
+        if (this.$.addArea.classList.contains("app")) {
+          this.$.addArea.classList.remove("app");
+          this.$.addArea.classList.add("app--centering__horizontal");
+        }
+        // set variable
+        this.set("showGoodreadsList", true);
+      },
+
       /**
        * BEGIN APP
        */
@@ -222,9 +264,15 @@
        * 
        */
       _handleRequestResponse: function(e) {
-        var tmp = e.detail.detail.response;
-        tmp.forEach(function(item) {
-          this.unshift("data", item);
+        // get books
+        var books = e.detail.detail.response;
+        // show good reads list
+        if (books.length > 0 && this.showAddArea) {
+          this._handleGoodreadsListView();
+        }
+        // push books into data binding
+        books.forEach(function(book) {
+          this.unshift("data", book);
         }.bind(this));
       },
       /**
