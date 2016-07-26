@@ -88,7 +88,7 @@
             this.$.bdRequester.request(options);
           }
         } else {
-          this.fire("request-failed", {msg: "No Search term available!"});
+          this.fire("search-all");
         }
       },
 
@@ -96,7 +96,13 @@
        * 
        */
       _handleRequestResponse: function(e) {
-        this.fire("search-response", e.detail);
+        // send data to app component
+        this.fire("search-response", {
+          books: e.detail.detail.response, 
+          searchterm: this.$.txtSearchRequest.value
+        });
+        // clear search input
+        this.$.txtSearchRequest.value = "";
       }
     });
   </script>
