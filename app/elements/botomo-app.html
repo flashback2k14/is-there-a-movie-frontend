@@ -277,16 +277,28 @@
        * 
        */
       _handleRequestResponse: function(e) {
+        // clear list
+        this.set("data", []);
         // get books
         var books = e.detail.detail.response;
         // show good reads list
         if (books.length > 0 && this.showAddArea) {
           this.set("showGoodreadsList", true);
+        } else {
+          this.set("showGoodreadsList", false);
         }
         // push books into data binding
-        books.forEach(function(book) {
-          this.unshift("data", book);
-        }.bind(this));
+        if (this.get("showAddArea") && this.get("showGoodreadsList")) {
+          // highest match is the first item
+          books.forEach(function(book) {
+            this.push("data", book);
+          }.bind(this));
+        } else {
+          // last added item is the first item
+          books.forEach(function(book) {
+            this.unshift("data", book);
+          }.bind(this));
+        }
       },
       /**
        * 
