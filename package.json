@@ -1,6 +1,7 @@
 {
   "name": "is-there-a-movie-frontend",
   "description": "Frontend for is-there-a-movie",
+  "version": "0.0.8",
   "private": true,
   "scripts": {
     "build": "polymer build --entrypoint app/index.html",
